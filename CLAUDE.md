@@ -13,6 +13,6 @@ When using OpenSpec, route to project personas if they exist in `.claude/agents/
   2. Mark the task complete in `tasks.md` (`- [ ]` → `- [x]`)
   3. Run the Reviewer (`reviewer.md`) against all changes made in this iteration
   4. If the Reviewer raises **blocking issues**: fix them using the appropriate persona, then return to step 3
-  5. If the Reviewer raises **warnings only**: note them and continue to the next pending task (step 1)
+  5. If the Reviewer raises **warnings only**: present them to the user and ask whether to fix any before proceeding. Fix any the user selects, then continue to the next pending task (step 1)
   6. Once the Reviewer is satisfied (no blocking issues), commit all changes for this task using a Conventional Commit message describing the task. This creates a clean restore point per task.
   7. If all tasks in `tasks.md` are complete and the Reviewer has no blocking issues: stop and report a summary of what was done and any outstanding warnings
