@@ -1,0 +1,8 @@
+services:
+  notirc:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: "8080"
+      NOTIRC_TOKEN: "${NOTIRC_TOKEN:-changeme}"
