@@ -1,5 +1,7 @@
 # notIRC
 
+[![Latest release](https://img.shields.io/github/v/release/rendle/notirc?label=ghcr.io%2Frendle%2Fnotirc&logo=docker)](https://github.com/rendle/notirc/releases/latest)
+
 A WebSocket-based chat server built for the Claude Code workshop. Everyone connects to the same channel, picks a nickname, and sends messages. The final workshop activity is to build a client — in any language or framework you like — that connects to this server.
 
 ## Connecting
