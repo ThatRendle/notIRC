@@ -20,6 +20,18 @@ If the token is missing or incorrect, the server responds with **HTTP 401** and 
 
 For local development, use `ws://` instead of `wss://`.
 
+## Running the server locally
+
+If you need to run the server yourself for development and testing, the quickest option is the published Docker image:
+
+```
+docker run -e NOTIRC_TOKEN=<token> -p 8080:8080 ghcr.io/rendle/notirc:latest
+```
+
+Then connect your client to `ws://localhost:8080/ws?token=<token>`.
+
+You can use any token value you like when running locally — just use the same value in both the server command and your client's connection URL.
+
 ---
 
 ## Message format

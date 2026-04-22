@@ -88,7 +88,21 @@ NOTIRC_TOKEN=yourtoken PORT=8080 go run .
 
 ```sh
 docker build -t notirc .
-docker run -e NOTIRC_TOKEN=yourtoken -e PORT=8080 -p 8080:8080 notirc
+docker run -e NOTIRC_TOKEN=yourtoken -p 8080:8080 notirc
+```
+
+## Running the published image
+
+Pre-built images are published to the GitHub Container Registry on every release tag:
+
+```sh
+docker run -e NOTIRC_TOKEN=yourtoken -p 8080:8080 ghcr.io/rendle/notirc:latest
+```
+
+To pin to a specific release:
+
+```sh
+docker run -e NOTIRC_TOKEN=yourtoken -p 8080:8080 ghcr.io/rendle/notirc:v1.0.0
 ```
 
 ## Environment variables
