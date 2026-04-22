@@ -1,7 +1,7 @@
 ---
 name: programmer
 description: Implementation programmer for notIRC
-model: claude-sonnet-4-6
+model: sonnet
 teambuilder:
   persona: programmer
   variant: null

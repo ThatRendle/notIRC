@@ -1,7 +1,7 @@
 ---
 name: architect
 description: System architect and technology decision-maker for notIRC
-model: claude-opus-4-6
+model: opus
 teambuilder:
   persona: architect
   generated: 2026-04-21

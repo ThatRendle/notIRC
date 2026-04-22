@@ -1,7 +1,7 @@
 ---
 name: tester
 description: Quality and verification expert for notIRC
-model: claude-sonnet-4-6
+model: sonnet
 teambuilder:
   persona: tester
   generated: 2026-04-21

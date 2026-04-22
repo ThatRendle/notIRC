@@ -1,7 +1,7 @@
 ---
 name: reviewer
 description: Code reviewer and conformance expert for notIRC
-model: claude-sonnet-4-6
+model: opus
 teambuilder:
   persona: reviewer
   generated: 2026-04-21

@@ -1,7 +1,7 @@
 ---
 name: analyst
 description: Business analyst and requirements expert for notIRC
-model: claude-sonnet-4-6
+model: sonnet
 teambuilder:
   persona: analyst
   generated: 2026-04-21
