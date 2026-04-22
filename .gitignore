@@ -1,0 +1,16 @@
+# Binary
+notirc
+
+# Go
+*.test
+*.out
+
+# Environment
+.env
+.env.*
+.envrc
+
+# Editor
+.DS_Store
+.vscode/
+.idea/
