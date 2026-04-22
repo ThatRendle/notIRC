@@ -25,7 +25,7 @@ For local development, use `ws://` instead of `wss://`.
 If you need to run the server yourself for development and testing, the quickest option is the published Docker image:
 
 ```
-docker run -e NOTIRC_TOKEN=<token> -p 8080:8080 ghcr.io/rendle/notirc:latest
+docker run -e NOTIRC_TOKEN=<token> -p 8080:8080 ghcr.io/thatrendle/notirc:latest
 ```
 
 Then connect your client to `ws://localhost:8080/ws?token=<token>`.

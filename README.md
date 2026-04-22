@@ -1,6 +1,6 @@
 # notIRC
 
-[![Latest release](https://img.shields.io/github/v/release/rendle/notirc?label=ghcr.io%2Frendle%2Fnotirc&logo=docker)](https://github.com/rendle/notirc/releases/latest)
+[![Latest release](https://img.shields.io/github/v/release/ThatRendle/notIRC?label=ghcr.io%2Fthatrendle%2Fnotirc&logo=docker)](https://github.com/ThatRendle/notIRC/releases/latest)
 
 A WebSocket-based chat server built for the Claude Code workshop. Everyone connects to the same channel, picks a nickname, and sends messages. The final workshop activity is to build a client — in any language or framework you like — that connects to this server.
 
@@ -98,13 +98,13 @@ docker run -e NOTIRC_TOKEN=yourtoken -p 8080:8080 notirc
 Pre-built images are published to the GitHub Container Registry on every release tag:
 
 ```sh
-docker run -e NOTIRC_TOKEN=yourtoken -p 8080:8080 ghcr.io/rendle/notirc:latest
+docker run -e NOTIRC_TOKEN=yourtoken -p 8080:8080 ghcr.io/thatrendle/notirc:latest
 ```
 
 To pin to a specific release:
 
 ```sh
-docker run -e NOTIRC_TOKEN=yourtoken -p 8080:8080 ghcr.io/rendle/notirc:v1.0.0
+docker run -e NOTIRC_TOKEN=yourtoken -p 8080:8080 ghcr.io/thatrendle/notirc:v1.0.0
 ```
 
 ## Environment variables
