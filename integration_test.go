@@ -15,8 +15,11 @@ const testToken = "test-secret"
 
 func startTestServer(t *testing.T) *httptest.Server {
 	t.Helper()
-	hub := newHub()
-	mux := newMux(hub, testToken)
+	rm, err := newRoomManager(testToken)
+	if err != nil {
+		t.Fatalf("newRoomManager: %v", err)
+	}
+	mux := newMux(rm)
 	srv := httptest.NewServer(mux)
 	t.Cleanup(srv.Close)
 	return srv
@@ -227,6 +230,65 @@ func TestIntegration_MessageError_OversizedMessage(t *testing.T) {
 	m = recv(t, conn)
 	if m["type"] != "message" {
 		t.Fatalf("expected message after error, got %v", m["type"])
+	}
+}
+
+func TestIntegration_UnrecognizedToken(t *testing.T) {
+	const multiTokens = "tok-a,tok-b"
+	rm, err := newRoomManager(multiTokens)
+	if err != nil {
+		t.Fatalf("newRoomManager: %v", err)
+	}
+	mux := newMux(rm)
+	srv := httptest.NewServer(mux)
+	t.Cleanup(srv.Close)
+
+	ctx := context.Background()
+	url := "ws" + strings.TrimPrefix(srv.URL, "http") + "/ws"
+
+	_, resp, err := websocket.Dial(ctx, url+"?token=not-configured", nil)
+	if err == nil {
+		t.Error("expected connection to fail with unrecognized token")
+	}
+	if resp != nil && resp.StatusCode != 401 {
+		t.Errorf("expected 401 for unrecognized token, got %d", resp.StatusCode)
+	}
+}
+
+func TestIntegration_RoomIsolation(t *testing.T) {
+	const multiTokens = "tok-a,tok-b"
+	rm, err := newRoomManager(multiTokens)
+	if err != nil {
+		t.Fatalf("newRoomManager: %v", err)
+	}
+	mux := newMux(rm)
+	srv := httptest.NewServer(mux)
+	t.Cleanup(srv.Close)
+
+	c1 := wsConnect(t, srv, "tok-a")
+	join(t, c1, "alice")
+
+	c2 := wsConnect(t, srv, "tok-b")
+	join(t, c2, "alice") // same nick, different room — should succeed
+
+	// c1 should NOT receive a user_joined for c2 (different room).
+	// Send a message from c1; c2 should NOT receive it.
+	send(t, c1, map[string]any{"type": "message", "text": "hello from room A"})
+
+	// c1 gets their own echo
+	m := recv(t, c1)
+	if m["type"] != "message" {
+		t.Fatalf("c1 expected message echo, got %v", m["type"])
+	}
+
+	// c2 sends a message in their room
+	send(t, c2, map[string]any{"type": "message", "text": "hello from room B"})
+	m = recv(t, c2)
+	if m["type"] != "message" {
+		t.Fatalf("c2 expected message echo, got %v", m["type"])
+	}
+	if m["text"] != "hello from room B" {
+		t.Errorf("c2 expected own message, got %v", m["text"])
 	}
 }
 

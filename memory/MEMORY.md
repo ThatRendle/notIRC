@@ -1,0 +1,1 @@
+- [GitHub release title format](feedback_release_title.md) — Use plain version number ("0.1.0") as release title, not "v0.1.0"

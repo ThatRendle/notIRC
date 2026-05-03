@@ -2,7 +2,7 @@
 
 [![Latest release](https://img.shields.io/github/v/release/ThatRendle/notIRC?label=ghcr.io%2Fthatrendle%2Fnotirc&logo=docker)](https://github.com/ThatRendle/notIRC/releases/latest)
 
-A WebSocket-based chat server built for the Claude Code workshop. Everyone connects to the same channel, picks a nickname, and sends messages. The final workshop activity is to build a client — in any language or framework you like — that connects to this server.
+A WebSocket-based chat server built for the Claude Code workshop. Each API token gets its own isolated chat room — run multiple workshops from a single deployment. Clients pick a nickname and send messages. The final workshop activity is to build a client — in any language or framework you like — that connects to this server.
 
 ## Connecting
 
@@ -83,14 +83,14 @@ GET /healthz → 200 OK
 ## Running locally
 
 ```sh
-NOTIRC_TOKEN=yourtoken PORT=8080 go run .
+NOTIRC_TOKENS=tok1,tok2,tok3 PORT=8080 go run .
 ```
 
 ## Running with Docker
 
 ```sh
 docker build -t notirc .
-docker run -e NOTIRC_TOKEN=yourtoken -p 8080:8080 notirc
+docker run -e NOTIRC_TOKENS=tok1,tok2,tok3 -p 8080:8080 notirc
 ```
 
 ## Running the published image
@@ -98,20 +98,20 @@ docker run -e NOTIRC_TOKEN=yourtoken -p 8080:8080 notirc
 Pre-built images are published to the GitHub Container Registry on every release tag:
 
 ```sh
-docker run -e NOTIRC_TOKEN=yourtoken -p 8080:8080 ghcr.io/thatrendle/notirc:latest
+docker run -e NOTIRC_TOKENS=tok1,tok2,tok3 -p 8080:8080 ghcr.io/thatrendle/notirc:latest
 ```
 
 To pin to a specific release:
 
 ```sh
-docker run -e NOTIRC_TOKEN=yourtoken -p 8080:8080 ghcr.io/thatrendle/notirc:v1.0.0
+docker run -e NOTIRC_TOKENS=tok1,tok2,tok3 -p 8080:8080 ghcr.io/thatrendle/notirc:v1.0.0
 ```
 
 ## Environment variables
 
 | Variable | Description | Required |
 |---|---|---|
-| `NOTIRC_TOKEN` | Shared API token for client authentication | Yes |
+| `NOTIRC_TOKENS` | Comma-separated list of API tokens for client authentication | Yes |
 | `PORT` | HTTP listen port (Railway sets this automatically) | No (default: 8080) |
 
 ## Deployment

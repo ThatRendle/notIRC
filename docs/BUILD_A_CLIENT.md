@@ -1,6 +1,6 @@
 # Building a notIRC Client
 
-notIRC is a WebSocket-based group chat server. All connected clients share a single channel. This document contains everything needed to build a working client in any language or on any platform.
+notIRC is a WebSocket-based group chat server. Each API token gets its own isolated chat room. This document contains everything needed to build a working client in any language or on any platform.
 
 ---
 
@@ -25,12 +25,12 @@ For local development, use `ws://` instead of `wss://`.
 If you need to run the server yourself for development and testing, the quickest option is the published Docker image:
 
 ```
-docker run -e NOTIRC_TOKEN=<token> -p 8080:8080 ghcr.io/thatrendle/notirc:latest
+docker run -e NOTIRC_TOKENS=tok1,tok2 -p 8080:8080 ghcr.io/thatrendle/notirc:latest
 ```
 
-Then connect your client to `ws://localhost:8080/ws?token=<token>`.
+Then connect your client to `ws://localhost:8080/ws?token=tok1`.
 
-You can use any token value you like when running locally — just use the same value in both the server command and your client's connection URL.
+You can use any token value you like when running locally — just use one of the values in your `NOTIRC_TOKENS` list in both the server command and your client's connection URL.
 
 ---
 

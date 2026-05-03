@@ -5,4 +5,4 @@ services:
       - "8080:8080"
     environment:
       PORT: "8080"
-      NOTIRC_TOKEN: "${NOTIRC_TOKEN:-changeme}"
+      NOTIRC_TOKENS: "${NOTIRC_TOKENS:-changeme}"

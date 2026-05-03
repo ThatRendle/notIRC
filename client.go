@@ -17,14 +17,14 @@ const (
 type Client struct {
 	nick string
 	conn *websocket.Conn
-	hub  *Hub
+	room *Room
 	send chan []byte
 }
 
-func newClient(conn *websocket.Conn, hub *Hub) *Client {
+func newClient(conn *websocket.Conn, room *Room) *Client {
 	return &Client{
 		conn: conn,
-		hub:  hub,
+		room: room,
 		send: make(chan []byte, writeBufSize),
 	}
 }
@@ -48,8 +48,8 @@ func (c *Client) writePump(ctx context.Context) {
 
 func (c *Client) readPump(ctx context.Context) {
 	defer func() {
-		// leave must run before close(send) so the Hub cannot send to a closed channel.
-		c.hub.leave(c)
+		// leave must run before close(send) so the Room cannot send to a closed channel.
+		c.room.leave(c)
 		close(c.send)
 	}()
 
@@ -75,7 +75,7 @@ func (c *Client) readPump(ctx context.Context) {
 			if err := json.Unmarshal(data, &msg); err != nil || msg.Nick == "" {
 				continue
 			}
-			ok, users := c.hub.join(c, msg.Nick)
+			ok, users := c.room.join(c, msg.Nick)
 			if !ok {
 				b, _ := marshalJoinError("nick_taken")
 				c.send <- b
@@ -100,7 +100,7 @@ func (c *Client) readPump(ctx context.Context) {
 				c.send <- b
 				continue
 			}
-			c.hub.broadcast(c.nick, msg.Text)
+			c.room.broadcast(c.nick, msg.Text)
 		default:
 			slog.Warn("unknown message type", "type", incoming.Type)
 		}

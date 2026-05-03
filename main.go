@@ -11,9 +11,11 @@ import (
 )
 
 func main() {
-	token := os.Getenv("NOTIRC_TOKEN")
-	if token == "" {
-		log.Fatal("NOTIRC_TOKEN environment variable is required")
+	tokensEnv := os.Getenv("NOTIRC_TOKENS")
+
+	rm, err := newRoomManager(tokensEnv)
+	if err != nil {
+		log.Fatalf("NOTIRC_TOKENS: %v", err)
 	}
 
 	port := os.Getenv("PORT")
@@ -21,8 +23,7 @@ func main() {
 		port = "8080"
 	}
 
-	hub := newHub()
-	mux := newMux(hub, token)
+	mux := newMux(rm)
 
 	addr := ":" + port
 	log.Printf("listening on %s", addr)
@@ -31,9 +32,9 @@ func main() {
 	}
 }
 
-func newMux(hub *Hub, token string) *http.ServeMux {
+func newMux(rm *RoomManager) *http.ServeMux {
 	mux := http.NewServeMux()
-	mux.HandleFunc("/ws", wsHandler(hub, token))
+	mux.HandleFunc("/ws", wsHandler(rm))
 	mux.HandleFunc("/healthz", healthzHandler)
 	return mux
 }
@@ -42,11 +43,14 @@ func healthzHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func wsHandler(hub *Hub, token string) http.HandlerFunc {
+func wsHandler(rm *RoomManager) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		remote := r.RemoteAddr
-		if r.URL.Query().Get("token") != token {
-			slog.Warn("connection rejected: bad token", "remote", remote)
+		token := r.URL.Query().Get("token")
+
+		room := rm.roomFor(token)
+		if room == nil {
+			slog.Warn("connection rejected: bad token", "token", token, "remote", remote)
 			http.Error(w, "unauthorized", http.StatusUnauthorized)
 			return
 		}
@@ -61,9 +65,9 @@ func wsHandler(hub *Hub, token string) http.HandlerFunc {
 			slog.Error("websocket upgrade failed", "remote", remote, "err", err)
 			return
 		}
-		slog.Info("connection accepted", "remote", remote)
+		slog.Info("connection accepted", "room", room.logToken, "remote", remote)
 
-		client := newClient(conn, hub)
+		client := newClient(conn, room)
 		ctx, cancel := context.WithCancel(r.Context())
 
 		go client.writePump(ctx)
